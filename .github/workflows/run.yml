@@ -1,31 +1,33 @@
-name: Run OLX Scraper
+name: Run Scraper
 
 on:
   workflow_dispatch:
     inputs:
       payload:
-        description: "JSON input"
+        description: "JSON input from Power Automate"
         required: true
 
 jobs:
-  run:
+  scrape:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up Python
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run scraper
+      - name: Run scraper with input
         run: python scraper.py '${{ github.event.inputs.payload }}'
 
-      - name: Upload result
+      - name: Upload Excel result
         uses: actions/upload-artifact@v3
         with:
-          name: report
+          name: rezultat
           path: output.xlsx
